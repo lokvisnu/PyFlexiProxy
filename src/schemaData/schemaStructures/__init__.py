@@ -1,0 +1,1 @@
+from .configSchema import ConfigurationSchema
