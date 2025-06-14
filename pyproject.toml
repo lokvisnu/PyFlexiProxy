@@ -9,9 +9,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pyyaml (>=6.0.2,<7.0.0)",
-    "schema (>=0.7.7,<0.8.0)"
+    "schema (>=0.7.7,<0.8.0)",
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

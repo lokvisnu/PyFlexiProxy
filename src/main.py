@@ -1,13 +1,19 @@
-import yaml
-from schemaData.validateSchema import validateConfig\
+import sys
+from master_process import MasterProcess
 
-configFile = "config.yaml"
 
-def loadConfig():
-    with open(configFile,'r') as f:
-        yaml_data = yaml.load(f,Loader=yaml.FullLoader)
-        validated_yaml = validateConfig(yaml_data)
-    print(validated_yaml)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <config_file_path>")
+        sys.exit(1)
 
-if __name__=="__main__":
-    loadConfig()
+    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+        print("Usage: python main.py <config_file_path>")
+        sys.exit(1)
+    config_file_path = sys.argv[1]
+    master_proc = MasterProcess(config_path = config_file_path)
+    try:
+        master_proc.start_process()
+    except Exception as e:
+        print(e);
+    

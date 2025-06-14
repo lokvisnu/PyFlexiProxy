@@ -1,4 +1,4 @@
-from schema import Schema, And, Use, Optional,Regex
+from schema import Schema, And, Use, Optional,Regex,SchemaError
 
 DEFAULT_PORT = 8080
 VALIDATE_HOST_NAME_REG_EX = "^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$"
@@ -32,3 +32,10 @@ ConfigurationSchema = Schema(
             ]
         }
 })
+
+def validate_config (config_data):
+    try:
+        validated_data = ConfigurationSchema.validate(config_data)
+        return validated_data
+    except SchemaError as e:
+        raise
