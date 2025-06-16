@@ -21,7 +21,7 @@ class MasterProcess:
     def start_process(self):
         if not self._check_config_file_path():
             raise Exception(f"config file path does not exists : {self.config_path}")
-        config_data = self._load_config().server
+        config_data = self._load_config()['server']
         self.__deconstruct_config_data(config_data=config_data)
         self.__listen_socket()
         self.__start_worker_processes()
@@ -39,15 +39,15 @@ class MasterProcess:
         return False
     
     def __deconstruct_config_data(self,config_data):
-        self.__worker_count = int(config_data.workers)
-        self.__host = str(config_data.host)
-        self.__port  = int(config_data.port)
+        self.__worker_count = int(config_data['workers'])
+        self.__host = str(config_data['host'])
+        self.__port  = int(config_data['port'])
 
     def __listen_socket(self):
         self.__server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         self.__server_socket.setblocking(False)
-        self.__server_socket.bind(self.__host,self.__port)
+        self.__server_socket.bind((self.__host,self.__port))
         self.__server_socket.listen(BACK_LOG)
         self.__socket_fd = self.__server_socket.fileno()
 

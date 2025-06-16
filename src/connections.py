@@ -6,8 +6,8 @@ class Connection:
         self._is_interanl = is_internal
         self._linked_fd = linked_fd
         self._conn_obj = conn_obj
-        self._rcv_data = ""
-        self.append_data(rcv_data==rcv_data)
+        self._rcv_data:str = ""
+        self.append_data(rcv_data=rcv_data)
 
     def set_linked_fd(self,linked_fd):
         self._linked_fd = linked_fd
@@ -21,7 +21,7 @@ class Connection:
         decoded_rcv_data = rcv_data
         if self.is_binary(rcv_data):
             decoded_rcv_data = rcv_data.decode('utf-8')
-        self._rcv_data = self._recv_data.join(decoded_rcv_data)
+        self._rcv_data = self._rcv_data.join(decoded_rcv_data)
 
     def fileno(self) -> int:
         return self._fd

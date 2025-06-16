@@ -9,7 +9,7 @@ ConfigurationSchema = Schema(
         "server" : {
             Optional("port",DEFAULT_PORT):And(int),
             "host":And(Use(str),Regex(VALIDATE_HOST_NAME_REG_EX)),
-            "domain":And(Use(str),Regex(VALIDATE_DOMAIN_NAME_REG_EX)),
+            "domain":Use(str),
             "workers":Use(int),
             Optional("headers",list()):[
                 {
