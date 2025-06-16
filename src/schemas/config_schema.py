@@ -1,13 +1,15 @@
 from schema import Schema, And, Use, Optional,Regex,SchemaError
 
 DEFAULT_PORT = 8080
-VALIDATE_HOST_NAME_REG_EX = "^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$"
+VALIDATE_HOST_NAME_REG_EX = r"^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$"
+VALIDATE_DOMAIN_NAME_REG_EX = r"^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z]{2,})+$"
 
 ConfigurationSchema = Schema(
     {
         "server" : {
             Optional("port",DEFAULT_PORT):And(int),
             "host":And(Use(str),Regex(VALIDATE_HOST_NAME_REG_EX)),
+            "domain":And(Use(str),Regex(VALIDATE_DOMAIN_NAME_REG_EX)),
             "workers":Use(int),
             Optional("headers",list()):[
                 {

@@ -1,15 +1,22 @@
-from multiprocessing import Process
+from multiprocessing import Process, process
 import socket
 import os.path
 import yaml
+from typing import List
 from schemas.config_schema import validate_config
-from worker_process import worker_function
+from worker_process import WorkerProcess
 
 BACK_LOG = 5
 class MasterProcess:
-    def __init__(self,config_path):
-        self.__config_path = config_path
-
+    def __init__(self,config_path:str):
+        self.__config_path :str= config_path
+        self.__workers: List[WorkerProcess] = list()
+        self.__worker_processes:List[Process]  = list()
+        self.__worker_count:int = None
+        self.__host:str = None
+        self.__port:int  = None
+        self.__server_socket:socket.SocketKind = None
+        self.__socket_fd:int = None
 
     def start_process(self):
         if not self._check_config_file_path():
@@ -35,9 +42,6 @@ class MasterProcess:
         self.__worker_count = int(config_data.workers)
         self.__host = str(config_data.host)
         self.__port  = int(config_data.port)
-        self.__upstreams = tuple(config_data.upstreams)
-        self.__headers = tuple(config_data.headers)
-        self.__workers = list()
 
     def __listen_socket(self):
         self.__server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -48,9 +52,11 @@ class MasterProcess:
         self.__socket_fd = self.__server_socket.fileno()
 
     def __start_worker_processes(self):
-        for i in range(self.__worker_count):
-            self.__workers[i] = Process(target=worker_function,args=(self.__socket_fd,))
-            self.__workers[i].start()
-        pass
+        for _ in range(self.__worker_count):  
+            worker = WorkerProcess(config_file_path=self.__config_path, server_socket_fd=self.__socket_fd)
+            process = Process(target=worker.start_worker, args=())
+            self.__workers.append(worker)
+            self.__worker_processes.append(process)
+            process.start()
 
 
